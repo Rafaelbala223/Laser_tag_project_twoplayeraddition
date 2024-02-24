@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import os
 from supabase import create_client
+from postgrest.exceptions import APIError
 
 # Load environment variables from .env file
 load_dotenv()
@@ -19,8 +20,6 @@ if url is None or key is None:
 # Create Supabase client
 supabase = create_client(url, key)
 
-# Function to insert user into "users" table
-from postgrest.exceptions import APIError
 
 def insert_user(username, user_id):
     # Define the data to be inserted
@@ -36,21 +35,3 @@ def insert_user(username, user_id):
         else:
             print("Failed to insert user due to an unknown error.")
             print(e)
-
-
-# PRINTING DATABASE CONTENT METHOD
-def print_database_content() -> None:
-    # Retrieve all rows from the "users" table
-    response = supabase.table("users").select("*").execute()
-
-    if "data" in response:
-        data = response["data"]  # Extract data from the response
-        if data:
-            print("Database Content:")
-            for row in data:
-                print(row)
-        else:
-            print("No data returned from the database.")
-    else:
-        print("Error fetching data from the database:", response)
-
